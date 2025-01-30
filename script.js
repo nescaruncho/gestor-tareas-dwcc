@@ -1,5 +1,7 @@
 // script.js
 
+        // Comentario para verificar que funciona la rama
+
 document.addEventListener('DOMContentLoaded', () => {
     // Selección de elementos
     const taskList = document.getElementById('task-list');
