@@ -1,3 +1,8 @@
+// script.js
+
+        // Comentario para verificar que funciona la rama
+//sfdfdd
+
 document.addEventListener('DOMContentLoaded', () => {
     const taskList = document.getElementById('task-list');
     const addTaskBtn = document.getElementById('add-task-btn');
