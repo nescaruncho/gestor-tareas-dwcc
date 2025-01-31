@@ -1,63 +1,105 @@
-// script.js
-
-        // Comentario para verificar que funciona la rama
-//sfdfdd
-
-document.addEventListener('DOMContentLoaded', () => {
-    const taskList = document.getElementById('task-list');
-    const addTaskBtn = document.getElementById('add-task-btn');
-
-    // Cargar tareas almacenadas al iniciar
-    function loadTasks() {
-        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        tasks.forEach(task => addTaskToDOM(task.title, task.category));
-    }
-
+/* script.js */
+document.addEventListener("DOMContentLoaded", loadTasks);
+document.addEventListener("DOMContentLoaded", loadCategorias());
+function addTask() {
+    let name = document.getElementById("taskName").value;
+    let date = document.getElementById("taskDate").value;
+    let category = document.getElementById("taskCategory").value;
+    
+    if (!name) return alert("Escribe una tarea");
+    
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasks.push({ name, date, category, completed: false });
+    localStorage.setItem("tasks", JSON.stringify(tasks));
     loadTasks();
+}
 
-    // Agregar tarea
-    addTaskBtn.addEventListener('click', () => {
-        const taskTitle = prompt('¿Cuál es la tarea que deseas agregar?');
-        const taskCategory = prompt('¿A qué categoría pertenece esta tarea?');
-
-        if (taskTitle && taskCategory) {
-            addTaskToDOM(taskTitle, taskCategory);
-            saveTask(taskTitle, taskCategory);
-        } else {
-            alert('Debes completar todos los campos');
-        }
-    });
-
-    // Función para agregar tarea al DOM
-    function addTaskToDOM(title, category) {
-        const newTask = document.createElement('div');
-        newTask.classList.add('task');
-        newTask.innerHTML = `
-            <h3>${title}</h3>
-            <p><strong>Categoría:</strong> ${category}</p>
-            <button class="remove-task">Eliminar</button>
+function loadTasks() {
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    let tasksContainer = document.getElementById("tasks");
+    tasksContainer.innerHTML = "";
+    
+    tasks.forEach((task, index) => {
+        let taskElement = document.createElement("div");
+        taskElement.className = "task" + (task.completed ? " completed" : "");
+        taskElement.innerHTML = `
+            <strong>${task.name}</strong> - ${task.category} - ${task.date}
+            <button onclick="toggleTask(${index})">✔</button>
+            <button onclick="deleteTask(${index})">🗑</button>
         `;
-        taskList.appendChild(newTask);
+        tasksContainer.appendChild(taskElement);
+    });
+}
 
-        // Agregar funcionalidad de eliminación
-        const removeBtn = newTask.querySelector('.remove-task');
-        removeBtn.addEventListener('click', () => {
-            taskList.removeChild(newTask);
-            removeTask(title);
-        });
+function toggleTask(index) {
+    let tasks = JSON.parse(localStorage.getItem("tasks"));
+    tasks[index].completed = !tasks[index].completed;
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    loadTasks();
+}
+
+function deleteTask(index) {
+    let tasks = JSON.parse(localStorage.getItem("tasks"));
+    tasks.splice(index, 1);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    loadTasks();
+}
+
+
+
+function addCat() {
+    let select = document.getElementById("taskCategory");
+    let catInput = document.getElementById("catName").value.trim(); // Obtener el valor del input
+
+    if (catInput === "") {
+        alert("Por favor, ingresa un nombre de categoría.");
+        return;
     }
 
-    // Guardar tarea en LocalStorage
-    function saveTask(title, category) {
-        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        tasks.push({ title, category });
-        localStorage.setItem('tasks', JSON.stringify(tasks));
+    let nuevaOpcion = document.createElement("option");
+    nuevaOpcion.value = catInput; // Asignar el valor
+    nuevaOpcion.text = catInput; // Asignar el texto visible
+    select.appendChild(nuevaOpcion); // Agregar la opción al select
+
+    // Guardar en localStorage
+    let categorias = JSON.parse(localStorage.getItem("categorias")) || [];
+    categorias.push({ name: catInput });
+    localStorage.setItem("categorias", JSON.stringify(categorias));
+
+    loadCategorias(); // Recargar las tareas
+}
+
+function loadCategorias() {
+    let tasks = JSON.parse(localStorage.getItem("categorias")) || [];
+    let tasksContainer = document.getElementById("categorias");
+    tasksContainer.innerHTML = "";
+}
+
+function eliminarCategoria() {
+    let select = document.getElementById("taskCategory");
+    let categoriaSeleccionada = select.value; // Obtener el valor de la categoría seleccionada
+
+    if (categoriaSeleccionada === "") {
+        alert("Por favor, selecciona una categoría para eliminar.");
+        return;
     }
 
-    // Eliminar tarea de LocalStorage
-    function removeTask(title) {
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        tasks = tasks.filter(task => task.title !== title);
-        localStorage.setItem('tasks', JSON.stringify(tasks));
+    // Eliminar la opción del <select>
+    let options = select.getElementsByTagName("option");
+    for (let i = 0; i < options.length; i++) {
+        if (options[i].value === categoriaSeleccionada) {
+            select.removeChild(options[i]);
+            break;
+        }
     }
-});
+
+    // Eliminar la categoría de las tareas en localStorage
+    let tasks = JSON.parse(localStorage.getItem("categorias")) || [];
+    tasks = tasks.filter(task => task.category !== categoriaSeleccionada); // Filtrar tareas sin la categoría eliminada
+
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+
+    loadTasks(); // Recargar las tareas
+}
+
+

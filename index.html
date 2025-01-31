@@ -7,55 +7,27 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-    <header>
-        <h1>Gestor de Tareas</h1>
-        <nav>
-            <ul>
-                <li><a href="#home">Inicio</a></li>
-                <li><a href="#categories">Categorías</a></li>
-                <li><a href="#tasks">Mis Tareas</a></li>
-                <li><a href="#goals">Mis Objetivos</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <section id="home">
-        <h2>Bienvenido al Gestor de Tareas</h2>
-        <p>Organiza tu vida de forma eficiente, gestionando tareas por categorías, fechas límite y metas.</p>
-    </section>
-
-    <section id="categories">
-        <h2>Categorías de Tareas</h2>
-        <ul>
-            <li>Trabajo</li>
-            <li>Hogar</li>
-            <li>Salud</li>
-            <li>Estudios</li>
-            <li>Otros</li>
-        </ul>
-    </section>
-
-    <section id="tasks">
-        <h2>Tareas Pendientes</h2>
-        <div id="task-list">
-            <!-- Aquí irán las tareas dinámicas -->
-        </div>
-        <button id="add-task-btn">Añadir Tarea</button>
-    </section>
-
-    <section id="goals">
-        <h2>Mis Objetivos</h2>
-        <ul>
-            <li>Estudiar 10 horas esta semana</li>
-            <li>Ir al gimnasio 3 veces esta semana</li>
-            <li>Leer 2 capítulos del libro</li>
-        </ul>
-    </section>
-
-    <footer>
-        <p>&copy; 2025 Gestor de Tareas</p>
-    </footer>
+    <h1>Gestor de Categor&iacute;as</h1>
+    <input type="text" id="catName" placeholder="Nueva categoría">
+    <button onclick="addCat()">Añadir Categoría</button>
+    <br><br>
+    
+    <select id="categorySelect">
+        <option value="">Seleccione una categoría para eliminar</option>
+        <!-- Las categorías se agregarán aquí dinámicamente -->
+    </select>
+    <button onclick="eliminarCategoria()">Eliminar Categoría</button>
+    
+    <h1>Gestor de Tareas</h1>
+    <input type="text" id="taskName" placeholder="Nueva tarea">
+    <input type="date" id="taskDate">
+    <select id="taskCategory">
+        <!-- Las categorías se llenarán dinámicamente -->
+    </select>
+    <button onclick="addTask()">Añadir Tarea</button>
+    
+    <h2>Tareas</h2>
+    <div id="tasks" class="task-list"></div>
 
     <script src="script.js"></script>
 </body>
