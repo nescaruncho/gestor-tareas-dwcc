@@ -1,34 +1,85 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestor de Tareas</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <h1>Gestor de Categor&iacute;as</h1>
-    <input type="text" id="catName" placeholder="Nueva categoría">
-    <button onclick="addCat()">Añadir Categoría</button>
-    <br><br>
-    
-    <select id="categorySelect">
-        <option value="">Seleccione una categoría para eliminar</option>
-        <!-- Las categorías se agregarán aquí dinámicamente -->
-    </select>
-    <button onclick="eliminarCategoria()">Eliminar Categoría</button>
-    
-    <h1>Gestor de Tareas</h1>
-    <input type="text" id="taskName" placeholder="Nueva tarea">
-    <input type="date" id="taskDate">
-    <select id="taskCategory">
-        <!-- Las categorías se llenarán dinámicamente -->
-    </select>
-    <button onclick="addTask()">Añadir Tarea</button>
-    
-    <h2>Tareas</h2>
-    <div id="tasks" class="task-list"></div>
+    <h1>Gestor de Tareas y Objetivos</h1>
+
+    <!-- Botones para navegar entre los gestores -->
+    <div class="menu-buttons">
+        <button onclick="showCategoryManager()">Gestor de Categorías</button>
+        <button onclick="showTaskManager()">Gestor de Tareas</button>
+        <button onclick="showGoalManager()">Mis Objetivos</button>
+    </div>
+
+    <!-- Contenedor principal donde se muestran las secciones -->
+    <div id="categoryManager" class="manager-container" style="display:none;">
+        <h2>Gestor de Categorías</h2>
+        <h3>Nueva Categoría:</h3>
+        <input type="text" id="catName" placeholder="Nombre categoría">
+        <button onclick="addCat()">Añadir Categoría</button>
+        <br><br>
+        <select id="categorySelect">
+            <option value="">Seleccione una categoría para eliminar</option>
+        </select>
+        <button onclick="eliminarCategoria()">Eliminar Categoría</button>
+    </div>
+
+    <div id="taskManager" class="manager-container" style="display:none;">
+        <h2>Gestor de Tareas</h2>
+        <h3>Nueva Tarea:</h3>
+        <input type="text" id="taskName" placeholder="Nombre tarea">
+        <input type="date" id="taskDate">
+        <select id="taskCategory"></select>
+        <select id="taskRecurring">
+            <option value="">Selecciona recurrencia</option>
+            <option value="diaria">Diaria</option>
+            <option value="semanal">Semanal</option>
+            <option value="mensual">Mensual</option>
+        </select>
+        <button onclick="addTask()">Añadir Tarea</button>
+
+        <h3>Tareas</h3>
+        <div id="tasks" class="task-list"></div>
+    </div>
+
+    <div id="goalManager" class="manager-container" style="display:none;">
+        <h2>Mis Objetivos</h2>
+
+        <!-- Formulario para agregar un objetivo -->
+        <div id="createGoalForm">
+            <h3>Nuevo Objetivo:</h3>
+            <input type="text" id="goalName" placeholder="Nombre objetivo">
+            <input type="date" id="goalDate">
+            <input type="number" id="goalProgress" placeholder="Progreso (%)" min="0" max="100">
+            <select id="goalTask"></select>
+            <button id="addGoalButton" onclick="addGoal()">Añadir Objetivo</button>
+        </div>
+
+        <!-- Formulario de edición de objetivo -->
+        <div id="editGoalFormContainer" style="display:none;">
+            <h3>Editar Objetivo:</h3>
+            <input type="text" id="editGoalName" placeholder="Nombre del objetivo">
+            <input type="date" id="editGoalDate">
+            <input type="number" id="editGoalProgress" placeholder="Progreso (%)">
+            <select id="editGoalTask">
+                <option value="">Selecciona una tarea</option>
+            </select>
+            <button id="updateGoalButton" onclick="updateGoal()">Actualizar Objetivo</button>
+        </div>
+
+
+        <h3>Objetivos</h3>
+        <div id="goals" class="goal-list"></div>
+    </div>
 
     <script src="script.js"></script>
 </body>
+
 </html>

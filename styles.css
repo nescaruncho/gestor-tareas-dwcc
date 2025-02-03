@@ -1,5 +1,100 @@
-/* styles.css */
-body { font-family: Arial, sans-serif; padding: 20px; }
-.task-list { margin-top: 20px; }
-.task { padding: 10px; border: 1px solid #ccc; margin-top: 5px; }
-.completed { text-decoration: line-through; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f4f7fa;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+h2 {
+    text-align: center;
+}
+
+.menu-buttons {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.menu-buttons button {
+    margin: 0 10px;
+    padding: 10px;
+    width: 200px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.menu-buttons button:hover {
+    background-color: #0056b3;
+}
+
+.manager-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+input, select {
+    margin: 5px;
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px;
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.btnTasks {
+    width: 5%;
+    margin: 5px;
+}
+.btnGoals {
+    width: 5%;
+    margin: 5px;
+}
+.push {
+    margin-left: auto;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.task-list, .goal-list {
+    margin-top: 20px;
+}
+
+.task, .goal {
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.completed {
+    text-decoration: line-through;
+    color: gray;
+}
+
