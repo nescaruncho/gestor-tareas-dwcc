@@ -8,21 +8,20 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
-
+    <script src="script.js"></script> <!-- Importa tu archivo de scripts -->
 </head>
 
-<body>
-    
-    <h1>Gestor de Tareas y Objetivos</h1>
+<body onload="validarAcceso()"> <!-- Llama a la función al cargar la página -->
+    <div id="contenido" style="display: none;">
+        <h1>Gestor de Tareas y Objetivos</h1>
+        <div class="menu-buttons">
 
-    <!-- Botones para navegar entre los gestores -->
-    <div class="menu-buttons">
-        <button onclick="showCategoryManager()">Categorías</button>
-        <button onclick="showTaskManager()">Tareas</button>
-        <button onclick="showGoalManager()">Mis Objetivos</button>
+            <button onclick="showCategoryManager()">Gestor de Categorías</button>
+            <button onclick="showTaskManager()">Gestor de Tareas</button>
+            <button onclick="showGoalManager()">Mis Objetivos</button>
+        </div>
     </div>
 
-    <!-- Contenedor principal donde se muestran las secciones -->
     <div id="categoryManager" class="manager-container" style="display:none;">
         <h2>Gestor de Categorías</h2>
         <hr class="mi-linea">
@@ -36,7 +35,6 @@
         <div class="nuevo-objetivo">
             <h3>Eliminar Categorías:</h3>
         </div><br><br>
-        <!-- Contenedor para mostrar las categorías como tags -->
         <div id="categoriesTags"></div>
         <button onclick="eliminarCategoriasSeleccionadas()">Eliminar Categorías Seleccionadas</button>
     </div>
@@ -49,33 +47,26 @@
         </div><br>
         <label for="taskName">Nombre:</label>
         <input type="text" id="taskName" placeholder="Nombre tarea">
-        
         <label for="taskDate">Fecha vencimiento:</label>
         <input type="date" id="taskDate">
-        
         <label for="taskTime">Hora vencimiento:</label>
         <input type="time" id="taskTime">
-        
         <label for="taskCategory">Categoría:</label>
         <select id="taskCategory"></select><br><br>
-    
+
         <label>Recurrencia (Opcional):</label>
-        <!-- Radios para la recurrencia -->
         <div style="margin-top: 10px;">
             <label class="myLabel">
-                <input id="diaria" type="radio" name="recurrence" value="diaria">
-                Diaria
+                <input id="diaria" type="radio" name="recurrence" value="diaria"> Diaria
             </label>
             <label class="myLabel">
-                <input id="semanal" type="radio" name="recurrence" value="semanal">
-                Semanal
+                <input id="semanal" type="radio" name="recurrence" value="semanal"> Semanal
             </label>
             <label class="myLabel">
-                <input id="mensual" type="radio" name="recurrence" value="mensual">
-                Mensual
+                <input id="mensual" type="radio" name="recurrence" value="mensual"> Mensual
             </label>
         </div>
-    
+
         <button onclick="addTask()">Añadir Tarea</button><br>
         <br>
         <div class="nuevo-objetivo">
@@ -83,12 +74,10 @@
         </div>
         <div id="tasks" class="task-list"></div>
     </div>
-    
 
     <div id="goalManager" class="manager-container" style="display:none;">
         <h2>Mis Objetivos</h2>
         <hr class="mi-linea">
-        <!-- Formulario para agregar un objetivo -->
         <div id="createGoalForm">
             <div class="nuevo-objetivo">
                 <h3>Nuevo Objetivo:</h3>
@@ -99,13 +88,13 @@
             <label for="goalDate">Fecha Vencimiento:</label>
             <input type="date" id="goalDate">
             <label for="goalProgress">Progreso:</label>
-            <input class="imputProgress" type="number" id="goalProgress" placeholder="Progreso (%)" min="0" max="100"><br>
+            <input class="imputProgress" type="number" id="goalProgress" placeholder="Progreso (%)" min="0"
+                max="100"><br>
             <label for="goalTask">Tareas Asignadas:</label><br>
             <select id="goalTask" multiple></select><br>
             <button id="addGoalButton" onclick="addGoal()">Añadir Objetivo</button>
         </div>
-        
-        <!-- Formulario de edición de objetivo -->
+
         <div id="editGoalFormContainer" style="display:none;">
             <div class="nuevo-objetivo">
                 <h3>Editar Objetivo:</h3>
@@ -118,12 +107,10 @@
             <label for="editGoalProgress">Progreso:</label>
             <input type="number" id="editGoalProgress" placeholder="Progreso (%)"><br>
             <label for="editGoalTask">Tareas Asignadas:</label><br>
-            <select id="editGoalTask" multiple>
-            </select>
-            <br>
+            <select id="editGoalTask" multiple></select><br>
             <button id="updateGoalButton" onclick="updateGoal()">Actualizar Objetivo</button>
         </div>
-        
+
         <br>
         <div class="nuevo-objetivo">
             <h3>Objetivos</h3>
@@ -131,7 +118,6 @@
         <div id="goals" class="goal-list"></div>
     </div>
 
-    <script src="script.js"></script>
 </body>
 
 </html>

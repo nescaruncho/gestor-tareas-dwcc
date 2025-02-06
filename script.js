@@ -658,3 +658,37 @@ function eliminarCategoriasSeleccionadas() {
 }
 
 
+
+/***********************************************************************************************************
+************************************ FUNCIONES VALIDACIÓN CALVICIE *****************************************
+************************************************************************************************************/
+
+function validarAcceso() {
+    Swal.fire({
+        title: "¿Eres calvo?",
+        icon: "question",
+        showDenyButton: true,
+        confirmButtonText: "Sí",
+        denyButtonText: "No",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: "Acceso restringido: \nNo se admiten calvos.",
+                text: "PD: Vete a Turquía si quieres entrar.",
+                icon: "error",
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            });
+        } else {
+            document.getElementById("contenido").style.display = "block";
+            Swal.fire("Acceso concedido", "Enorabuena por tu pelazo!", "success");
+        }
+    });
+}
+
+
+
