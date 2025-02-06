@@ -50,6 +50,20 @@ strong {
     padding: 0;
   }
   
+  input#catName {
+    border: 1px solid rgb(185, 182, 182); /* Define un borde inicial con el mismo grosor */
+    padding: 8px; /* Ajusta el relleno para mantener tamaño consistente */
+    width: 200px; /* Opcional: define un ancho fijo */
+    box-sizing: border-box; /* Evita que el borde agrande el input */
+}
+
+input#catName:hover,
+input#catName:focus {
+    border: 1.8px solid rgb(45, 141, 197);
+    outline: none;
+}
+  
+
 /* ---------------------------------------------------------------------------
    Input de progreso (placeholder completo)
    --------------------------------------------------------------------------- */
@@ -86,10 +100,10 @@ button {
 
 /* Botón Gestor de Categorías (primer botón) */
 .menu-buttons button:nth-child(1) {
-    background-color: #a3ceef;  /* Tan */
+    background-color: #57b1fa;  /* Tan */
 }
 .menu-buttons button:nth-child(1):hover {
-    background-color: #7bb4e3;  /* Tonalidad ligeramente más oscura */
+    background-color: #3ea2f5;  /* Tonalidad ligeramente más oscura */
     transform: translateY(-4px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
@@ -150,13 +164,13 @@ select,
 
 /* Gestor de Categorías */
 #categoryManager button {
-    background-color: #a3ceef;
+    background-color: #51aefa;
     padding: 10px;
     margin-top: 10px;
     color: white;
 }
 #categoryManager button:hover {
-    background-color: #7bb4e3;
+    background-color: #3ea2f5;
     transform: translateY(-4px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
