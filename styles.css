@@ -1,4 +1,7 @@
-* {
+/* ---------------------------------------------------------------------------
+   Reset y estilos base
+   --------------------------------------------------------------------------- */
+   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -20,6 +23,55 @@ h2 {
     text-align: center;
 }
 
+h3 {
+    margin-top: 20px;
+}
+
+h5 {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+strong {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.nuevo-objetivo {
+    position: relative;
+    display: inline-block;
+    padding: 5px;
+    background-color: #dfe9f5; /* Fondo del rectángulo */
+    border-radius: 12px; /* Esquinas redondeadas */
+  }
+  
+  .nuevo-objetivo h3 {
+    margin: 0;
+    padding: 0;
+  }
+  
+/* ---------------------------------------------------------------------------
+   Input de progreso (placeholder completo)
+   --------------------------------------------------------------------------- */
+.imputProgress {
+    width: 110px;
+}
+
+/* ---------------------------------------------------------------------------
+   Estilos base para botones
+   Se les asigna transición, border-radius y font-weight para efectos hover
+   --------------------------------------------------------------------------- */
+button {
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+/* ---------------------------------------------------------------------------
+   Menú de botones (global)
+   --------------------------------------------------------------------------- */
 .menu-buttons {
     text-align: center;
     margin-bottom: 20px;
@@ -27,19 +79,44 @@ h2 {
 
 .menu-buttons button {
     margin: 0 10px;
-    padding: 10px;
+    padding: 12px 20px;
     width: 200px;
-    background-color: #007bff;
     color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
 }
 
-.menu-buttons button:hover {
-    background-color: #0056b3;
+/* Botón Gestor de Categorías (primer botón) */
+.menu-buttons button:nth-child(1) {
+    background-color: #a3ceef;  /* Tan */
+}
+.menu-buttons button:nth-child(1):hover {
+    background-color: #7bb4e3;  /* Tonalidad ligeramente más oscura */
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
+/* Botón Gestor de Tareas (segundo botón) */
+.menu-buttons button:nth-child(2) {
+    background-color: #4e97d1;  /* Marrón claro */
+}
+.menu-buttons button:nth-child(2):hover {
+    background-color: #006db2;  /* Más oscuro */
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Botón Mis Objetivos (tercer botón) */
+.menu-buttons button:nth-child(3) {
+    background-color: #00609c;  /* Sienna */
+}
+.menu-buttons button:nth-child(3):hover {
+    background-color: #003f5d;  /* Sienna oscura */
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* ---------------------------------------------------------------------------
+   Estilos para contenedores de cada gestor
+   --------------------------------------------------------------------------- */
 .manager-container {
     background-color: #fff;
     padding: 20px;
@@ -47,40 +124,134 @@ h2 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* ---------------------------------------------------------------------------
+   Estilos para inputs y selects
+   --------------------------------------------------------------------------- */
 input, select {
     margin: 5px;
-    padding: 10px;
-    width: 100%;
+    padding: 5px;
+    width: auto;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
-button {
-    margin-top: 10px;
-    padding: 10px;
-    width: 100%;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
+/* Ajustar el cursor a los input, radios y labels */
+input[type="date"],
+input[type="radio"],
+select,
+.myLabel {
     cursor: pointer;
 }
+
+/* ---------------------------------------------------------------------------
+   Botones internos en cada sección.
+   Los botones heredan el color característico del gestor correspondiente.
+   --------------------------------------------------------------------------- */
+
+/* Gestor de Categorías */
+#categoryManager button {
+    background-color: #a3ceef;
+    padding: 10px;
+    margin-top: 10px;
+    color: white;
+}
+#categoryManager button:hover {
+    background-color: #7bb4e3;
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Gestor de Tareas */
+#taskManager button {
+    background-color: #4e97d1;
+    padding: 10px;
+    margin-top: 10px;
+    color: white;
+}
+#taskManager button:hover {
+    background-color: #006db2;
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Mis Objetivos */
+#goalManager button {
+    background-color: #00609c;
+    padding: 10px;
+    margin-top: 10px;
+    color: white;
+}
+#goalManager button:hover {
+    background-color: #003f5d;
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* ---------------------------------------------------------------------------
+   Botones específicos de tareas y objetivos (tamaños reducidos)
+   --------------------------------------------------------------------------- */
 .btnTasks {
     width: 5%;
     margin: 5px;
 }
+
 .btnGoals {
     width: 5%;
     margin: 5px;
 }
+.btnGoals2 {
+    width: 5%;
+    margin: 5px;
+}
+
+
+/* Clase para empujar botones a la derecha en contenedores flex */
 .push {
     margin-left: auto;
 }
 
-button:hover {
-    background-color: #0056b3;
+/* Botón de "tic" (check) en objetivos */
+#goalManager .btnGoals.push {
+    background-color: #90ee90; /* Verde clarito */
+    color: white;
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 
+/* Efecto hover para el botón de tic */
+#goalManager .btnGoals.push:hover {
+    background-color: #7ccc7c; /* Verde un poco más oscuro en hover */
+    transform: translateY(-2px);
+}
+
+/* Botón de la papelera en objetivos */
+#goalManager .btnGoals:not(.push) {
+    background-color: #7066e0; /* Violeta oscuro */
+    color: white;
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+/* Efecto hover para el botón de la papelera */
+#goalManager .btnGoals:not(.push):hover {
+    background-color: #5c54b0; /* Variante más oscura del violeta */
+    transform: translateY(-2px);
+}
+
+/* Estilo para el botón de editar objetivo */
+#goalManager .btnGoals2 {
+    background-color: #f0ad4e; /* Color amarillo para editar */
+    color: white;
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+#goalManager .btnGoals2:hover {
+    background-color: #ec971f; /* Amarillo un poco más oscuro en hover */
+    transform: translateY(-2px);
+}
+
+
+/* ---------------------------------------------------------------------------
+   Listas de tareas y objetivos
+   --------------------------------------------------------------------------- */
 .task-list, .goal-list {
     margin-top: 20px;
 }
@@ -91,10 +262,83 @@ button:hover {
     margin-top: 5px;
     display: flex;
     align-items: center;
+    border-radius: 5px;
 }
 
+/* ---------------------------------------------------------------------------
+   Estilo para tareas y objetivos completados
+   --------------------------------------------------------------------------- */
 .completed {
-    text-decoration: line-through;
+    background-color: #e0ffe0;
     color: gray;
+    text-decoration: line-through;
+    border-left: 5px solid green;
+}
+
+/* ---------------------------------------------------------------------------
+   Estilos para etiquetas de categoría
+   --------------------------------------------------------------------------- */
+.category-tag {
+    display: inline-block;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 5px 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.category-tag.selected {
+    background-color: #7066e0;
+    border-color: #3a3483;
+}
+
+.mi-linea {
+    border: none;
+    height: 2px;
+    background-color: #009dcf;
+    margin: 10px 0;
+  }
+  
+  /* Botón del "tic" (check): usa la combinación de clases btnTasks y push */
+#taskManager .btnTasks.push  {
+    background-color: #90ee90; /* Verde clarito */
+    color: white;
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+  }
+  
+  /* Efecto hover para el botón de tic */
+  #taskManager  .btnTasks.push:hover {
+    background-color: #7ccc7c; /* Verde un poco más oscuro en hover */
+    transform: translateY(-2px);
+  }
+  
+  /* Botón de la papelera: se selecciona el botón que tenga btnTasks pero NO push */
+#taskManager .btnTasks:not(.push) {
+    background-color: #7066e0; /* Color deseado para la papelera */
+    color: white;
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+  }
+  
+  /* Efecto hover para el botón de la papelera */
+#taskManager  .btnTasks:not(.push):hover {
+    background-color: #5c54b0; /* Variante un poco más oscura en hover */
+    transform: translateY(-2px);
+  }
+  
+  .btnGoals {
+    background-color: #A0522D; /* Color base */
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+.btnGoals:hover {
+    background-color: #8B3E2F; /* Color más oscuro al pasar el mouse */
+    transform: translateY(-2px);
+}
+.completed-btn {
+    background-color: #90ee90 !important; /* Verde para objetivos completados */
 }
 

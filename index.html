@@ -6,9 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestor de Tareas</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+
 </head>
 
 <body>
+    
     <h1>Gestor de Tareas y Objetivos</h1>
 
     <!-- Botones para navegar entre los gestores -->
@@ -21,61 +25,109 @@
     <!-- Contenedor principal donde se muestran las secciones -->
     <div id="categoryManager" class="manager-container" style="display:none;">
         <h2>Gestor de Categorías</h2>
-        <h3>Nueva Categoría:</h3>
+        <hr class="mi-linea">
+        <div class="nuevo-objetivo">
+            <h3>Nueva Categoría:</h3>
+        </div><br>
+        <label for="catName">Nombre:</label>
         <input type="text" id="catName" placeholder="Nombre categoría">
         <button onclick="addCat()">Añadir Categoría</button>
-        <br><br>
-        <select id="categorySelect">
-            <option value="">Seleccione una categoría para eliminar</option>
-        </select>
-        <button onclick="eliminarCategoria()">Eliminar Categoría</button>
+        <br><br><br>
+        <div class="nuevo-objetivo">
+            <h3>Eliminar Categorías:</h3>
+        </div><br><br>
+        <!-- Contenedor para mostrar las categorías como tags -->
+        <div id="categoriesTags"></div>
+        <button onclick="eliminarCategoriasSeleccionadas()">Eliminar Categorías Seleccionadas</button>
     </div>
 
     <div id="taskManager" class="manager-container" style="display:none;">
         <h2>Gestor de Tareas</h2>
-        <h3>Nueva Tarea:</h3>
+        <hr class="mi-linea">
+        <div class="nuevo-objetivo">
+            <h3>Nueva Tarea:</h3>
+        </div><br>
+        <label for="taskName">Nombre:</label>
         <input type="text" id="taskName" placeholder="Nombre tarea">
+        
+        <label for="taskDate">Fecha vencimiento:</label>
         <input type="date" id="taskDate">
-        <select id="taskCategory"></select>
-        <select id="taskRecurring">
-            <option value="">Selecciona recurrencia</option>
-            <option value="diaria">Diaria</option>
-            <option value="semanal">Semanal</option>
-            <option value="mensual">Mensual</option>
-        </select>
-        <button onclick="addTask()">Añadir Tarea</button>
-
-        <h3>Tareas</h3>
+        
+        <label for="taskTime">Hora vencimiento:</label>
+        <input type="time" id="taskTime">
+        
+        <label for="taskCategory">Categoría:</label>
+        <select id="taskCategory"></select><br><br>
+    
+        <label>Recurrencia (Opcional):</label>
+        <!-- Radios para la recurrencia -->
+        <div style="margin-top: 10px;">
+            <label class="myLabel">
+                <input id="diaria" type="radio" name="recurrence" value="diaria">
+                Diaria
+            </label>
+            <label class="myLabel">
+                <input id="semanal" type="radio" name="recurrence" value="semanal">
+                Semanal
+            </label>
+            <label class="myLabel">
+                <input id="mensual" type="radio" name="recurrence" value="mensual">
+                Mensual
+            </label>
+        </div>
+    
+        <button onclick="addTask()">Añadir Tarea</button><br>
+        <br>
+        <div class="nuevo-objetivo">
+            <h3>Tareas:</h3>
+        </div>
         <div id="tasks" class="task-list"></div>
     </div>
+    
 
     <div id="goalManager" class="manager-container" style="display:none;">
         <h2>Mis Objetivos</h2>
-
+        <hr class="mi-linea">
         <!-- Formulario para agregar un objetivo -->
         <div id="createGoalForm">
-            <h3>Nuevo Objetivo:</h3>
+            <div class="nuevo-objetivo">
+                <h3>Nuevo Objetivo:</h3>
+            </div>
+            <br>
+            <label for="goalName">Nombre:</label>
             <input type="text" id="goalName" placeholder="Nombre objetivo">
+            <label for="goalDate">Fecha Vencimiento:</label>
             <input type="date" id="goalDate">
-            <input type="number" id="goalProgress" placeholder="Progreso (%)" min="0" max="100">
-            <select id="goalTask"></select>
+            <label for="goalProgress">Progreso:</label>
+            <input class="imputProgress" type="number" id="goalProgress" placeholder="Progreso (%)" min="0" max="100"><br>
+            <label for="goalTask">Tareas Asignadas:</label><br>
+            <select id="goalTask" multiple></select><br>
             <button id="addGoalButton" onclick="addGoal()">Añadir Objetivo</button>
         </div>
-
+        
         <!-- Formulario de edición de objetivo -->
         <div id="editGoalFormContainer" style="display:none;">
-            <h3>Editar Objetivo:</h3>
+            <div class="nuevo-objetivo">
+                <h3>Editar Objetivo:</h3>
+            </div>
+            <br>
+            <label for="editGoalName">Nombre:</label>
             <input type="text" id="editGoalName" placeholder="Nombre del objetivo">
+            <label for="editGoalDate">Fecha Vencimiento:</label>
             <input type="date" id="editGoalDate">
-            <input type="number" id="editGoalProgress" placeholder="Progreso (%)">
-            <select id="editGoalTask">
-                <option value="">Selecciona una tarea</option>
+            <label for="editGoalProgress">Progreso:</label>
+            <input type="number" id="editGoalProgress" placeholder="Progreso (%)"><br>
+            <label for="editGoalTask">Tareas Asignadas:</label><br>
+            <select id="editGoalTask" multiple>
             </select>
+            <br>
             <button id="updateGoalButton" onclick="updateGoal()">Actualizar Objetivo</button>
         </div>
-
-
-        <h3>Objetivos</h3>
+        
+        <br>
+        <div class="nuevo-objetivo">
+            <h3>Objetivos</h3>
+        </div>
         <div id="goals" class="goal-list"></div>
     </div>
 
