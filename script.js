@@ -383,6 +383,7 @@ function loadGoals() {
             <strong>${goal.name}</strong> <strong>Fecha:</strong> ${goal.date}  
             <strong>Progreso:</strong> ${goal.progress}%  
             ${goal.completed ? "(Completado)" : "(En progreso)"}
+            <strong>Tareas asignadas: </strong>${goal.tasks}
             <button class="btnGoals push" onclick="toggleGoal(${index})">✔</button>
             <button class="btnGoals" onclick="deleteGoal(${index})">🗑</button>
             <button class="btnGoals2" onclick="editGoal(${index})">✏️</button>
