@@ -275,43 +275,6 @@ function deleteTask(index) {
     loadGoals();
 }
 
-
-// function checkTaskDeadlines() {
-//     if (!("Notification" in window)) {
-//         console.log("Este navegador no soporta notificaciones de escritorio.");
-//         return;
-//     }
-
-//     if (Notification.permission !== "granted") {
-//         Notification.requestPermission();
-//     }
-
-//     let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-//     let now = new Date();
-//     const thresholdDays = 2; // Umbral de 2 días
-
-//     tasks.forEach(task => {
-//         // Combina la fecha y la hora en formato ISO
-//         let taskDateTime = new Date(task.date + 'T' + task.time);
-//         let diffTime = taskDateTime - now;
-//         let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-//         if (diffDays <= thresholdDays && diffDays >= 0 && !task.completed) {
-//             if (Notification.permission === "granted") {
-//                 new Notification("Tarea Próxima a Vencer", {
-//                     body: `La tarea "${task.name}" vence en ${diffDays} día(s).`
-//                 });
-//             } else {
-//                 Swal.fire({
-//                     icon: 'warning',
-//                     title: 'Tarea Próxima a Vencer',
-//                     text: `La tarea "${task.name}" vence en ${diffDays} día(s).`
-//                 });
-//             }
-//         }
-//     });
-// }
-
 function checkTaskDeadlines() {
     if (!("Notification" in window)) return;
  
