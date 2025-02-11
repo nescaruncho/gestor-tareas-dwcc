@@ -503,15 +503,9 @@ function loadGoals() {
         let goalColor = goal.completed ? "green" : "#00609c"; 
 
         goalElement.innerHTML = `
-            <div style="${textDecoration}">
-                <strong style="color: ${goalColor}; font-weight: bold;">
-                    <i class="fa-solid fa-star" style="color: ${goalColor};"></i> ${goal.name}
-                </strong>  
-                <strong style="${fadedText}">Fecha:</strong> <span style="${fadedText}">${goal.date}</span>  
-                <strong style="${fadedText}">Progreso:</strong> <span style="${fadedText}">${goal.progress}%</span>  
-                ${goal.completed ? "(Completado)" : "(En progreso)"}
-                <strong style="${fadedText}">Tareas asignadas:</strong> <span style="${fadedText}">${goal.tasks}</span>
-            </div>
+            <strong>${goal.name}</strong> <strong>Fecha:</strong> ${goal.date}  
+            <strong>Progreso:</strong> ${goal.progress}%  
+            ${goal.completed ? "(Completado)" : "(En progreso)"}
             <button class="btnGoals push" onclick="toggleGoal(${index})">✔</button>
             <button class="btnGoals" onclick="deleteGoal(${index})">🗑</button>
             <button class="btnGoals2" onclick="editGoal(${index})" ${editButtonState} style="${editButtonStyle}">✏️</button>
