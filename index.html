@@ -97,27 +97,21 @@
             <label for="goalDate">Fecha vencimiento:</label>
             <input type="date" id="goalDate">
             <label for="goalProgress">Progreso:</label>
-            <input class="imputProgress" type="number" id="goalProgress" placeholder="Progreso (%)" min="0"
-                max="100"><br>
+            <input class="imputProgress" type="text" id="goalProgress" placeholder="%" readonly><br>
             <label for="goalTask">Tareas asignadas:</label><br>
             <select id="goalTask" multiple></select><br>
             <button id="addGoalButton" onclick="addGoal()">Añadir objetivo</button>
         </div>
 
-        <div id="editGoalFormContainer" style="display:none;">
-            <div class="nuevo-objetivo">
-                <h3>Editar objetivo:</h3>
-            </div>
-            <br>
-            <label for="editGoalName">Nombre:</label>
+        <div id="editGoalFormContainer" style="display: none;">
+            <h3>Editar Objetivo</h3>
             <input type="text" id="editGoalName" placeholder="Nombre del objetivo">
-            <label for="editGoalDate">Fecha vencimiento:</label>
             <input type="date" id="editGoalDate">
-            <label for="editGoalProgress">Progreso:</label>
-            <input type="number" id="editGoalProgress" placeholder="Progreso (%)"><br>
-            <label for="editGoalTask">Tareas asignadas:</label><br>
-            <select id="editGoalTask" multiple></select><br>
-            <button id="updateGoalButton" onclick="updateGoal()">Actualizar objetivo</button>
+            <input type="text" id="editGoalProgress" readonly>
+            <select id="editGoalTask" multiple>
+                <!-- Las opciones se cargarán dinámicamente -->
+            </select>
+            <button id="updateGoalButton" onclick="updateGoal()">Actualizar Objetivo</button>
         </div>
         <br>
 

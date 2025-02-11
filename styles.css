@@ -256,6 +256,26 @@ select,
     transform: translateY(-2px);
 }
 
+.btnProgress {
+    background-color: #00609c;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 0px 6px;
+    margin: 0 2px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.btnProgress:hover {
+    background-color: #004c7c;
+}
+
+.btnProgress:active {
+    transform: scale(0.95);
+}
+
 
 /* ---------------------------------------------------------------------------
    Listas de tareas y objetivos

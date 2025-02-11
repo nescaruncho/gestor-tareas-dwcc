@@ -14,7 +14,7 @@
 - Uso del `localStorage` para persistencia de datos.
 - Gestión de Categorías (añadir, eliminar).
 - Gestión de Tareas (crear, editar, eliminar, completar, recurrencia).
-- Gestión de Objetivos (asignar tareas, progreso, eliminación).
+- Gestión de Objetivos (añadir, editar, asignar tareas, progreso, eliminar).
 - Notificaciones de vencimiento de tareas.
 - Validaciones y gestión de excepciones
 

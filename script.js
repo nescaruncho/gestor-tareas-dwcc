@@ -444,14 +444,13 @@ function checkTaskDeadlines() {
 function addGoal() {
     let nameInput = document.getElementById("goalName");
     let dateInput = document.getElementById("goalDate");
-    let progressInput = document.getElementById("goalProgress");
     let taskSelect = document.getElementById("goalTask");
 
     let name = nameInput.value.trim();
     let date = dateInput.value;
-    let progress = progressInput.value.trim();
+    let progress = 0;
 
-    if (!name || !date || progress === "" || isNaN(progress) || progress < 0 || progress > 100) {
+    if (!name || !date) {
         Swal.fire({ icon: 'error', title: 'Error', text: 'Por favor, completa todos los campos correctamente' });
         return;
     }
@@ -502,14 +501,29 @@ function loadGoals() {
         let editButtonStyle = goal.completed ? "background-color: gray; cursor: not-allowed;" : "";
         let goalColor = goal.completed ? "green" : "#00609c"; 
 
-        goalElement.innerHTML = `
-            <strong>${goal.name}</strong> <strong>Fecha:</strong> ${goal.date}  
-            <strong>Progreso:</strong> ${goal.progress}%  
-            ${goal.completed ? "(Completado)" : "(En progreso)"}
+        // Crear botones de progreso con estilos
+        let progressButtons = !goal.completed ? `
+            <button class="btnProgress" onclick="updateGoalProgress(${index}, -10)" title="Reducir progreso">-</button>
+            <button class="btnProgress" onclick="updateGoalProgress(${index}, 10)" title="Aumentar progreso">+</button>
+            ` : '';
+
+            goalElement.innerHTML = `
+            <div style="${textDecoration}">
+                <strong style="color: ${goalColor}; font-weight: bold;">
+                    <i class="fa-solid fa-star" style="color: ${goalColor};"></i> ${goal.name}
+                </strong>  
+                <strong style="${fadedText}">Fecha:</strong> <span style="${fadedText}">${goal.date}</span>  
+                <strong style="${fadedText}">Progreso:</strong> 
+                <span style="${fadedText}">
+                    ${goal.progress}% ${progressButtons}
+                </span>
+                ${goal.completed ? "(Completado)" : "(En progreso)"}
+                <strong style="${fadedText}">Tareas asignadas:</strong> <span style="${fadedText}">${goal.tasks}</span>
+            </div>
             <button class="btnGoals push" onclick="toggleGoal(${index})">✔</button>
             <button class="btnGoals" onclick="deleteGoal(${index})">🗑</button>
             <button class="btnGoals2" onclick="editGoal(${index})" ${editButtonState} style="${editButtonStyle}">✏️</button>
-        `;
+            `;
 
         goalsContainer.appendChild(goalElement);
 
@@ -573,17 +587,24 @@ function getDragAfterElement(goalsContainer, y) {
     ).element;
 }
 
-
 function editGoal(index) {
     let goals = JSON.parse(localStorage.getItem("goals"));
     let goal = goals[index];
 
+    // Establecer los valores en el formulario
     document.getElementById("editGoalName").value = goal.name;
     document.getElementById("editGoalDate").value = goal.date;
-    document.getElementById("editGoalProgress").value = goal.progress;
+    
+    // Mostrar el progreso como texto de solo lectura
+    let editGoalProgress = document.getElementById("editGoalProgress");
+    editGoalProgress.value = goal.progress;
+    editGoalProgress.readOnly = true;
+    editGoalProgress.style.backgroundColor = "#f0f0f0"; // Estilo visual de solo lectura
 
     // Cargar las tareas en el selector
     loadTasksForEditGoal(goal.tasks || []);
+    
+    // Mostrar el formulario de edición
     document.getElementById("createGoalForm").style.display = "none";
     document.getElementById("editGoalFormContainer").style.display = "block";
     document.getElementById("updateGoalButton").dataset.index = index;
@@ -593,41 +614,77 @@ function updateGoal() {
     let index = document.getElementById("updateGoalButton").dataset.index;
     let name = document.getElementById("editGoalName").value;
     let date = document.getElementById("editGoalDate").value;
-    let progress = document.getElementById("editGoalProgress").value;
+    let goals = JSON.parse(localStorage.getItem("goals"));
+    
+    // Mantener el progreso existente
+    let progress = goals[index].progress;
 
-    // Obtener las tareas seleccionadas (puede estar vacío)
+    // Obtener las tareas seleccionadas
     let taskSelect = document.getElementById("editGoalTask");
     let selectedTasks = Array.from(taskSelect.selectedOptions).map(option => option.value);
 
-    // Validar los campos obligatorios (se elimina la validación de tareas)
-    if (!name || !date || !progress) {
+    // Validación de campos obligatorios
+    if (!name || !date) {
         return Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Todos los campos (excepto las tareas) son obligatorios.',
+            text: 'El nombre y la fecha son obligatorios.',
         });
-        
     }
 
-    let goals = JSON.parse(localStorage.getItem("goals"));
-
+    // Actualizar el objetivo manteniendo el progreso original
     goals[index] = {
         name,
         date,
         progress,
-        tasks: selectedTasks, // Puede ser un array vacío
+        tasks: selectedTasks,
         completed: goals[index].completed
     };
 
     localStorage.setItem("goals", JSON.stringify(goals));
+    
     Swal.fire({
         icon: 'success',
         title: '¡Éxito!',
         text: `El objetivo "${name}" se ha editado correctamente.`,
     });
+
+    // Restaurar la vista del formulario de creación
     document.getElementById("editGoalFormContainer").style.display = "none";
     document.getElementById("createGoalForm").style.display = "block";
+    
+    // Recargar la lista de objetivos
     loadGoals();
+}
+
+function updateGoalProgress(index, increment) {
+    let goals = JSON.parse(localStorage.getItem("goals")) || [];
+    let goal = goals[index];
+    
+    // Convertir el progreso actual a número
+    let currentProgress = parseInt(goal.progress);
+    
+    // Calcular el nuevo progreso
+    let newProgress = currentProgress + increment;
+    
+    // Limitar el progreso entre 0 y 100
+    newProgress = Math.min(Math.max(newProgress, 0), 100);
+    
+    // Actualizar solo si el valor ha cambiado
+    if (currentProgress !== newProgress) {
+        goal.progress = newProgress;
+        localStorage.setItem("goals", JSON.stringify(goals));
+        loadGoals(); // Recargar la vista
+        
+        // Mostrar notificación del cambio
+        Swal.fire({
+            icon: 'success',
+            title: 'Progreso actualizado',
+            text: `Progreso de "${goal.name}" actualizado a ${newProgress}%`,
+            timer: 1500,
+            showConfirmButton: false
+        });
+    }
 }
 
 
