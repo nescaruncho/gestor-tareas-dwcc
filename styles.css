@@ -39,12 +39,13 @@ strong {
 
 .nuevo-objetivo {
     position: relative;
-    display: inline-block;
+    display: block; /* Cambié de inline-block a block */
     padding: 5px;
     background-color: #dfe9f5; /* Fondo del rectángulo */
     border-radius: 12px; /* Esquinas redondeadas */
-  }
-  
+    width: 100%; /* Asegura que ocupe todo el ancho de su contenedor */
+}
+
   .nuevo-objetivo h3 {
     margin: 0;
     padding: 0;
@@ -56,13 +57,6 @@ strong {
     width: 200px; /* Opcional: define un ancho fijo */
     box-sizing: border-box; /* Evita que el borde agrande el input */
 }
-
-input#catName:hover,
-input#catName:focus {
-    border: 1.8px solid rgb(45, 141, 197);
-    outline: none;
-}
-  
 
 /* ---------------------------------------------------------------------------
    Input de progreso (placeholder completo)
@@ -135,7 +129,7 @@ button {
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px #0167869c;
 }
 
 /* ---------------------------------------------------------------------------
@@ -303,15 +297,32 @@ select,
 }
 
 .category-tag.selected {
-    background-color: #7066e0;
-    border-color: #3a3483;
+    background-color: #f83a3a;
+    border-color: #9c0101;
 }
 
 .mi-linea {
     border: none;
     height: 2px;
-    background-color: #009dcf;
+    background-color: #64bfdb;
     margin: 10px 0;
+  }
+  .mi-linea2 {
+    border: none;
+    height: 2px;
+    background-color: #031216;
+    margin: 10px auto;
+    width: 50%; /* Ajusta el ancho de la línea (puedes cambiar el 50% al valor que prefieras) */
+
+  }
+
+  .separar {
+    margin-top: 2.5%;
+    margin-bottom: 2.5%;
+  }
+  .separar2 {
+    margin-top: 2%;
+    margin-bottom: 2%;
   }
   
   /* Botón del "tic" (check): usa la combinación de clases btnTasks y push */

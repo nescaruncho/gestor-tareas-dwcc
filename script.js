@@ -132,25 +132,50 @@ function updateTaskOrder() {
 function loadTasks() {
     let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
     let taskContainer = document.getElementById("tasks");
-
     taskContainer.innerHTML = ""; // Limpiar tareas anteriores
+
+    // Ordenar las tareas por fecha y hora de vencimiento más próxima
+    tasks.sort((a, b) => {
+        let dateA = new Date(a.date + 'T' + a.time);
+        let dateB = new Date(b.date + 'T' + b.time);
+        return dateA - dateB; // Orden ascendente
+    });
 
     // Cargar tareas al Gestor de Tareas
     tasks.forEach((task, index) => {
         let taskElement = document.createElement("div");
         taskElement.className = "task" + (task.completed ? " completed" : "");
+        taskElement.draggable = true;  
+
+        // Estilos condicionales si la tarea está completada
+        let textDecoration = task.completed ? "text-decoration: line-through; color: black;" : "";
+        let fadedText = task.completed ? "color: gray;" : "";
+        let editButtonState = task.completed ? "disabled" : "";
+        let editButtonStyle = task.completed ? "background-color: gray; cursor: not-allowed;" : "";
+        let taskColor = task.completed ? "green" : "#00609c";
+
         taskElement.innerHTML = `
-            <strong>${task.name}</strong> 
-            <strong>Categoría:</strong> ${task.category} 
-            <strong>Fecha:</strong> ${task.date} 
-            <strong>Hora:</strong> ${task.time} 
-            ${task.recurring ? "(Recurrencia: " + task.recurring + ")" : ""}
+            <div style="${textDecoration}">
+                <strong style="color: ${taskColor}; font-weight: bold;">
+                    <i class="fa-solid fa-circle" style="color: ${taskColor}; font-size: 0.8em;"></i> ${task.name}
+                </strong>  
+                <strong style="${fadedText}">Categoría:</strong> <span style="${fadedText}">${task.category}</span>  
+                <strong style="${fadedText}">Fecha:</strong> <span style="${fadedText}">${task.date}</span>  
+                <strong style="${fadedText}">Hora:</strong> <span style="${fadedText}">${task.time}</span>  
+                ${task.recurring ? "(Recurrencia: " + task.recurring + ")" : ""}
+            </div>
             <button class="btnTasks push" onclick="toggleTask(${index})">✔</button>
             <button class="btnTasks" onclick="deleteTask(${index})">🗑</button>
+            <button class="btnTasks" onclick="editTask(${index})" ${editButtonState} style="${editButtonStyle}">✏️</button>
         `;
+
         taskContainer.appendChild(taskElement);
     });
+
+    // Guardar la lista ordenada en localStorage
+    localStorage.setItem("tasks", JSON.stringify(tasks));
 }
+
 
 
 function updateTaskListForGoals() {
@@ -249,7 +274,88 @@ function toggleTask(index) {
     updateTaskListForGoals(); // Actualiza la lista de tareas en Mis Objetivos
 }
 
+function editTask(index) {
+    let tasks = JSON.parse(localStorage.getItem("tasks"));
+    let task = tasks[index];
 
+    // Rellenar los campos del formulario con los datos de la tarea
+    document.getElementById("taskName").value = task.name;
+    document.getElementById("taskDate").value = task.date;
+    document.getElementById("taskTime").value = task.time;
+    document.getElementById("taskCategory").value = task.category;
+
+    // Marcar la recurrencia si existe
+    if (task.recurring) {
+        document.querySelector(`input[name="recurrence"][value="${task.recurring}"]`).checked = true;
+    }
+
+    // Cambiar el texto y la función del botón
+    let addButton = document.querySelector('button[onclick="addTask()"]');
+    addButton.textContent = "Actualizar Tarea";
+    addButton.onclick = function() { updateTask(index); };
+
+    // Hacer scroll suave hacia arriba con offset
+    const offset = 150; // Puedes ajustar este valor según necesites
+    const elementPosition = document.getElementById("taskName").getBoundingClientRect().top;
+    const offsetPosition = elementPosition + window.pageYOffset - offset;
+    
+    window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+    });
+}
+
+function updateTask(index) {
+    let tasks = JSON.parse(localStorage.getItem("tasks"));
+    let task = tasks[index];
+
+    // Obtener los valores actualizados del formulario
+    task.name = document.getElementById("taskName").value;
+    task.date = document.getElementById("taskDate").value;
+    task.time = document.getElementById("taskTime").value;
+    task.category = document.getElementById("taskCategory").value;
+    task.recurring = document.querySelector('input[name="recurrence"]:checked')
+        ? document.querySelector('input[name="recurrence"]:checked').value
+        : '';
+
+    // Validaciones...
+    if (!task.name || !task.date || !task.time || !task.category) {
+        Swal.fire({ icon: 'error', title: 'Error', text: 'Todos los campos son obligatorios' });
+        return;
+    }
+
+    let now = new Date();
+    let taskDateTime = new Date(task.date + 'T' + task.time);
+    if (taskDateTime < now) {
+        Swal.fire({ icon: 'error', title: 'Error', text: 'La fecha y hora de la tarea no pueden ser anteriores a la actual' });
+        return;
+    }
+
+    // Guardar las tareas actualizadas
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+
+    // Mostrar mensaje de éxito
+    Swal.fire({ icon: 'success', title: '¡Éxito!', text: `La tarea "${task.name}" se ha actualizado correctamente.` });
+
+    // Restablecer el formulario
+    document.getElementById("taskName").value = "";
+    document.getElementById("taskDate").value = "";
+    document.getElementById("taskTime").value = "";
+    document.getElementById("taskCategory").value = "";
+    document.querySelectorAll('input[name="recurrence"]').forEach(radio => radio.checked = false);
+
+    // Restaurar el botón a su estado original usando el mismo selector que en editTask
+    let addButton = document.querySelector('button[onclick="addTask()"]');
+    // Primero removemos el event listener actual
+    addButton.onclick = null;
+    // Restauramos el texto y la función original
+    addButton.textContent = "Añadir Tarea";
+    addButton.onclick = addTask;
+
+    // Actualizar vistas
+    loadTasks();
+    updateTaskListForGoals();
+}
 
 function deleteTask(index) {
     let tasks = JSON.parse(localStorage.getItem("tasks"));
@@ -332,21 +438,24 @@ function checkTaskDeadlines() {
     }
  }
 
-
 /************************************************************************************************************
 **************************************** FUNCIONES GESTOR DE OBJETIVOS **************************************
 *************************************************************************************************************/
 function addGoal() {
-    let name = document.getElementById("goalName").value;
-    let date = document.getElementById("goalDate").value;
-    let progress = document.getElementById("goalProgress").value;
+    let nameInput = document.getElementById("goalName");
+    let dateInput = document.getElementById("goalDate");
+    let progressInput = document.getElementById("goalProgress");
+    let taskSelect = document.getElementById("goalTask");
+
+    let name = nameInput.value.trim();
+    let date = dateInput.value;
+    let progress = progressInput.value.trim();
 
     if (!name || !date || progress === "" || isNaN(progress) || progress < 0 || progress > 100) {
         Swal.fire({ icon: 'error', title: 'Error', text: 'Por favor, completa todos los campos correctamente' });
         return;
     }
 
-    let taskSelect = document.getElementById("goalTask");
     let selectedTasks = Array.from(taskSelect.selectedOptions).map(option => option.value);
 
     let goals = JSON.parse(localStorage.getItem("goals")) || [];
@@ -360,35 +469,57 @@ function addGoal() {
 
     localStorage.setItem("goals", JSON.stringify(goals));
 
-    // Comprobar si el objetivo se guarda correctamente
-    console.log(JSON.parse(localStorage.getItem("goals")));
-
     Swal.fire({ icon: 'success', title: '¡Éxito!', text: `El objetivo "${name}" se ha añadido correctamente.` });
 
     loadGoals(); // Cargar los objetivos después de añadir uno nuevo
+
+    // Limpiar los campos de entrada y eliminar placeholders
+    nameInput.value = "";
+    nameInput.placeholder = "";
+    
+    dateInput.value = "";
+    
+    progressInput.value = "";
+    progressInput.placeholder = "";
+    
+    taskSelect.selectedIndex = -1; // Desseleccionar todas las tareas
 }
 
 function loadGoals() {
     let goals = JSON.parse(localStorage.getItem("goals")) || [];
     let goalsContainer = document.getElementById("goals");
-    goalsContainer.innerHTML = ""; // Limpiar la lista de objetivos antes de volver a cargarla
+    goalsContainer.innerHTML = ""; // Limpiar la lista antes de recargar
 
     goals.forEach((goal, index) => {
         let goalElement = document.createElement("div");
         goalElement.className = "goal" + (goal.completed ? " completed" : "");
-        goalElement.draggable = true;  // Hace el objetivo arrastrable
+        goalElement.draggable = true;  
 
-        // Añadir los datos del objetivo
+        // Estilos condicionales si el objetivo está completado
+        let textDecoration = goal.completed ? "text-decoration: line-through; color: black;" : "";
+        let fadedText = goal.completed ? "color: gray;" : "";
+        let editButtonState = goal.completed ? "disabled" : "";
+        let editButtonStyle = goal.completed ? "background-color: gray; cursor: not-allowed;" : "";
+        let goalColor = goal.completed ? "green" : "#00609c"; 
+
         goalElement.innerHTML = `
-            <strong>${goal.name}</strong> <strong>Fecha:</strong> ${goal.date}  
-            <strong>Progreso:</strong> ${goal.progress}%  
-            ${goal.completed ? "(Completado)" : "(En progreso)"}
+            <div style="${textDecoration}">
+                <strong style="color: ${goalColor}; font-weight: bold;">
+                    <i class="fa-solid fa-star" style="color: ${goalColor};"></i> ${goal.name}
+                </strong>  
+                <strong style="${fadedText}">Fecha:</strong> <span style="${fadedText}">${goal.date}</span>  
+                <strong style="${fadedText}">Progreso:</strong> <span style="${fadedText}">${goal.progress}%</span>  
+                ${goal.completed ? "(Completado)" : "(En progreso)"}
+                <strong style="${fadedText}">Tareas asignadas:</strong> <span style="${fadedText}">${goal.tasks}</span>
+            </div>
             <button class="btnGoals push" onclick="toggleGoal(${index})">✔</button>
             <button class="btnGoals" onclick="deleteGoal(${index})">🗑</button>
-            <button class="btnGoals2" onclick="editGoal(${index})">✏️</button>
-
+            <button class="btnGoals2" onclick="editGoal(${index})" ${editButtonState} style="${editButtonStyle}">✏️</button>
         `;
 
+        goalsContainer.appendChild(goalElement);
+
+        
         // Añadir los eventos de drag and drop
         goalElement.addEventListener("dragstart", (e) => {
             goalElement.classList.add("dragging");
@@ -476,7 +607,12 @@ function updateGoal() {
 
     // Validar los campos obligatorios (se elimina la validación de tareas)
     if (!name || !date || !progress) {
-        return alert("Todos los campos (excepto las tareas) son obligatorios.");
+        return Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Todos los campos (excepto las tareas) son obligatorios.',
+        });
+        
     }
 
     let goals = JSON.parse(localStorage.getItem("goals"));
@@ -490,7 +626,11 @@ function updateGoal() {
     };
 
     localStorage.setItem("goals", JSON.stringify(goals));
-    alert(`El objetivo "${name}" se ha editado correctamente.`);
+    Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: `El objetivo "${name}" se ha editado correctamente.`,
+    });
     document.getElementById("editGoalFormContainer").style.display = "none";
     document.getElementById("createGoalForm").style.display = "block";
     loadGoals();
@@ -522,7 +662,8 @@ function deleteGoal(index) {
 ************************************ FUNCIONES GESTOR DE CATEGORIAS ****************************************
 ************************************************************************************************************/
 function addCat() {
-    let catName = document.getElementById("catName").value;
+    let catInput = document.getElementById("catName");
+    let catName = catInput.value.trim(); // Evitar espacios vacíos
 
     if (!catName) {
         return Swal.fire({
@@ -555,6 +696,10 @@ function addCat() {
         title: 'Categoría creada',
         text: `Categoría "${catName}" creada correctamente`
     });
+
+    // Limpiar el campo de entrada y eliminar el placeholder
+    catInput.value = "";
+    catInput.placeholder = "";
 }
 
 
@@ -644,14 +789,18 @@ function validarAcceso() {
                 icon: "error",
                 showConfirmButton: false,
                 allowOutsideClick: false,
-                allowEscapeKey: false
+                allowEscapeKey: false,
+                timer: 3000 // Cierra automáticamente la alerta después de 3 segundos
+            }).then(() => {
+                window.close(); // Intenta cerrar la pestaña actual
             });
         } else {
             document.getElementById("contenido").style.display = "block";
-            Swal.fire("Acceso concedido", "Enorabuena por tu pelazo!", "success");
+            Swal.fire("Acceso concedido", "¡Enhorabuena por tu pelazo!", "success");
         }
     });
 }
+
 
 
 
