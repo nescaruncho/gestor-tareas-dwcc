@@ -37,6 +37,10 @@ strong {
     margin-left: 10px;
 }
 
+select>option{
+    min-width: 100px;
+}
+
 .nuevo-objetivo {
     position: relative;
     display: block; /* Cambié de inline-block a block */

@@ -43,7 +43,8 @@
         <div class="separar2">
             <div id="categoriesTags"></div>
         </div>
-        <button style="margin-bottom: 2%;"  onclick="eliminarCategoriasSeleccionadas()">Eliminar categorías seleccionadas</button>
+        <button style="margin-bottom: 2%;" onclick="eliminarCategoriasSeleccionadas()">Eliminar categorías
+            seleccionadas</button>
     </div>
 
 
@@ -104,7 +105,9 @@
         </div>
 
         <div id="editGoalFormContainer" style="display: none;">
-            <h3>Editar Objetivo</h3>
+            <div class="nuevo-objetivo">
+                <h3>Editar Objetivo:</h3>
+            </div>
             <label for="editGoalName">Nombre:</label>
             <input type="text" id="editGoalName" placeholder="Nombre del objetivo">
             <label for="editgoalDate">Fecha vencimiento:</label>
@@ -112,9 +115,9 @@
             <label for="editGoalProgress">Progreso:</label>
             <input type="text" id="editGoalProgress" readonly><br>
             <label for="editGoalTask">Tareas asignadas:</label><br>
-            <select id="editGoalTask" multiple><br>
+            <select id="editGoalTask" multiple>
                 <!-- Las opciones se cargarán dinámicamente -->
-            </select>
+            </select><br>
             <button id="updateGoalButton" onclick="updateGoal()">Actualizar Objetivo</button>
         </div>
         <br>
