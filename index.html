@@ -105,10 +105,14 @@
 
         <div id="editGoalFormContainer" style="display: none;">
             <h3>Editar Objetivo</h3>
+            <label for="editGoalName">Nombre:</label>
             <input type="text" id="editGoalName" placeholder="Nombre del objetivo">
+            <label for="editgoalDate">Fecha vencimiento:</label>
             <input type="date" id="editGoalDate">
-            <input type="text" id="editGoalProgress" readonly>
-            <select id="editGoalTask" multiple>
+            <label for="editGoalProgress">Progreso:</label>
+            <input type="text" id="editGoalProgress" readonly><br>
+            <label for="editGoalTask">Tareas asignadas:</label><br>
+            <select id="editGoalTask" multiple><br>
                 <!-- Las opciones se cargarán dinámicamente -->
             </select>
             <button id="updateGoalButton" onclick="updateGoal()">Actualizar Objetivo</button>
