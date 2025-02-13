@@ -1,10 +1,10 @@
 /************************************************************************************************************
  ********************************* CARGA DE DATOS AL INICIAR LA APLICACIÓN **********************************
  ************************************************************************************************************/
-document.addEventListener("DOMContentLoaded", () => {
+ document.addEventListener("DOMContentLoaded", () => {
     loadTasks();           // Cargar las tareas
     loadCategorias();      // Cargar las categorías
-    loadGoals(true);           // Cargar los objetivos
+    loadGoals();           // Cargar los objetivos
     checkTaskDeadlines();  // Verificar tareas que vencen hoy
     updateTaskListForGoals();  // Actualizar tareas en los objetivos
 });
@@ -378,7 +378,7 @@ function deleteTask(index) {
     // Actualizamos la vista: tareas y objetivos
     loadTasks();
     updateTaskListForGoals();
-    loadGoals(true);
+    loadGoals();
 }
 
 function checkTaskDeadlines() {
@@ -470,7 +470,7 @@ function addGoal() {
 
     Swal.fire({ icon: 'success', title: '¡Éxito!', text: `El objetivo "${name}" se ha añadido correctamente.` });
 
-    loadGoals(true); // Cargar los objetivos después de añadir uno nuevo
+    loadGoals(); // Cargar los objetivos después de añadir uno nuevo
 
     // Limpiar los campos de entrada y eliminar placeholders
     nameInput.value = "";
@@ -484,38 +484,54 @@ function addGoal() {
     taskSelect.selectedIndex = -1; // Desseleccionar todas las tareas
 }
 
-function loadGoals(sort = true) {
+function loadGoals() {
     let goals = JSON.parse(localStorage.getItem("goals")) || [];
     let goalsContainer = document.getElementById("goals");
-    goalsContainer.innerHTML = "";
-
-    // Ordenar objetivos por fecha solo si sort es true
-    if (sort) {
-        goals.sort((a, b) => {
-            let dateA = new Date(a.date);
-            let dateB = new Date(b.date);
-            return dateA - dateB;
-        });
-        localStorage.setItem("goals", JSON.stringify(goals)); // Guardamos el orden inicial
-    }
+    goalsContainer.innerHTML = ""; // Limpiar la lista antes de recargar
 
     goals.forEach((goal, index) => {
         let goalElement = document.createElement("div");
         goalElement.className = "goal" + (goal.completed ? " completed" : "");
-        goalElement.draggable = true;
+        goalElement.draggable = true;  
 
-        goalElement.innerHTML = `
-            <strong>${goal.name}</strong> <strong>Fecha:</strong> ${goal.date}  
-            <strong>Progreso:</strong> ${goal.progress}%  
-            ${goal.completed ? "(Completado)" : "(En progreso)"}
+        // Estilos condicionales si el objetivo está completado
+        let textDecoration = goal.completed ? "text-decoration: line-through; color: black;" : "";
+        let fadedText = goal.completed ? "color: gray;" : "";
+        let editButtonState = goal.completed ? "disabled" : "";
+        let editButtonStyle = goal.completed ? "background-color: gray; cursor: not-allowed;" : "";
+        let goalColor = goal.completed ? "green" : "#00609c"; 
+
+        // Crear botones de progreso con estilos
+        let progressButtons = !goal.completed ? `
+            <button class="btnProgress" onclick="updateGoalProgress(${index}, -10)" title="Reducir progreso">-</button>
+            <button class="btnProgress" onclick="updateGoalProgress(${index}, 10)" title="Aumentar progreso">+</button>
+            ` : '';
+
+            goalElement.innerHTML = `
+            <div style="${textDecoration}">
+                <strong style="color: ${goalColor}; font-weight: bold;">
+                    <i class="fa-solid fa-star" style="color: ${goalColor};"></i> ${goal.name}
+                </strong>  
+                <strong style="${fadedText}">Fecha:</strong> <span style="${fadedText}">${goal.date}</span>  
+                <strong style="${fadedText}">Progreso:</strong> 
+                <span style="${fadedText}">
+                    ${goal.progress}% ${progressButtons}
+                </span>
+                ${goal.completed ? "(Completado)" : "(En progreso)"}
+                <strong style="${fadedText}">Tareas asignadas:</strong> <span style="${fadedText}">${goal.tasks}</span>
+            </div>
             <button class="btnGoals push" onclick="toggleGoal(${index})">✔</button>
             <button class="btnGoals" onclick="deleteGoal(${index})">🗑</button>
-            <button class="btnGoals2" onclick="editGoal(${index})">✏️</button>
-        `;
+            <button class="btnGoals2" onclick="editGoal(${index})" ${editButtonState} style="${editButtonStyle}">✏️</button>
+            `;
 
+        goalsContainer.appendChild(goalElement);
+
+        
+        // Añadir los eventos de drag and drop
         goalElement.addEventListener("dragstart", (e) => {
             goalElement.classList.add("dragging");
-            e.dataTransfer.setData("text", index);
+            e.dataTransfer.setData("text", index); // Guardamos el índice del objetivo que estamos arrastrando
         });
 
         goalElement.addEventListener("dragend", () => {
@@ -525,6 +541,7 @@ function loadGoals(sort = true) {
         goalsContainer.appendChild(goalElement);
     });
 
+    // Permitir soltar los objetivos arrastrados
     goalsContainer.addEventListener("dragover", (e) => {
         e.preventDefault();
         const draggingElement = document.querySelector(".dragging");
@@ -538,8 +555,10 @@ function loadGoals(sort = true) {
 
     goalsContainer.addEventListener("drop", (e) => {
         e.preventDefault();
-        const draggedIndex = e.dataTransfer.getData("text");
+        const draggedIndex = e.dataTransfer.getData("text");  // Obtener el índice del objetivo arrastrado
         const draggingGoal = goals[draggedIndex];
+
+        // Mover el objetivo en la lista
         const afterElement = getDragAfterElement(goalsContainer, e.clientY);
         const currentIndex = Array.from(goalsContainer.children).indexOf(afterElement);
 
@@ -547,7 +566,7 @@ function loadGoals(sort = true) {
         goals.splice(currentIndex, 0, draggingGoal);
 
         localStorage.setItem("goals", JSON.stringify(goals));
-        loadGoals(false); // Llamamos a loadGoals con sort = false
+        loadGoals(); // Recargar la lista de objetivos después del cambio
     });
 }
 
@@ -635,7 +654,7 @@ function updateGoal() {
     document.getElementById("createGoalForm").style.display = "block";
     
     // Recargar la lista de objetivos
-    loadGoals(true);
+    loadGoals();
 }
 
 function updateGoalProgress(index, increment) {
@@ -655,7 +674,7 @@ function updateGoalProgress(index, increment) {
     if (currentProgress !== newProgress) {
         goal.progress = newProgress;
         localStorage.setItem("goals", JSON.stringify(goals));
-        loadGoals(true); // Recargar la vista
+        loadGoals(); // Recargar la vista
         
         // Mostrar notificación del cambio
         Swal.fire({
@@ -675,7 +694,7 @@ function toggleGoal(index) {
     if (goals[index]) {  // Asegurarse de que el índice es válido
         goals[index].completed = !goals[index].completed;
         localStorage.setItem("goals", JSON.stringify(goals));
-        loadGoals(true); // Actualiza la lista de objetivos
+        loadGoals(); // Actualiza la lista de objetivos
     }
 }
 
@@ -685,7 +704,7 @@ function deleteGoal(index) {
     if (goals[index]) {  // Asegurarse de que el índice es válido
         goals.splice(index, 1);
         localStorage.setItem("goals", JSON.stringify(goals));
-        loadGoals(true); // Actualiza la lista de objetivos
+        loadGoals(); // Actualiza la lista de objetivos
     }
 }
 
