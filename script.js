@@ -151,7 +151,7 @@ function loadTasks() {
         let textDecoration = task.completed ? "text-decoration: line-through; color: black;" : "";
         let fadedText = task.completed ? "color: gray;" : "";
         let editButtonState = task.completed ? "disabled" : "";
-        let editButtonStyle = task.completed ? "background-color: gray; cursor: not-allowed;" : "";
+        let editButtonStyle = task.completed ? "background-color: gray; cursor: not-allowed;" : "background-color: orange;";
         let taskColor = task.completed ? "green" : "#00609c";
 
         taskElement.innerHTML = `
@@ -175,7 +175,6 @@ function loadTasks() {
     // Guardar la lista ordenada en localStorage
     localStorage.setItem("tasks", JSON.stringify(tasks));
 }
-
 
 
 function updateTaskListForGoals() {
@@ -278,6 +277,9 @@ function editTask(index) {
     let tasks = JSON.parse(localStorage.getItem("tasks"));
     let task = tasks[index];
 
+    // Cambiar el título
+    document.getElementById("taskTitle").textContent = "Editar tarea:";
+
     // Rellenar los campos del formulario con los datos de la tarea
     document.getElementById("taskName").value = task.name;
     document.getElementById("taskDate").value = task.date;
@@ -344,11 +346,10 @@ function updateTask(index) {
     document.getElementById("taskCategory").value = "";
     document.querySelectorAll('input[name="recurrence"]').forEach(radio => radio.checked = false);
 
-    // Restaurar el botón a su estado original usando el mismo selector que en editTask
+    // Restaurar el título y el botón
+    document.getElementById("taskTitle").textContent = "Nueva tarea:";
     let addButton = document.querySelector('button[onclick="addTask()"]');
-    // Primero removemos el event listener actual
     addButton.onclick = null;
-    // Restauramos el texto y la función original
     addButton.textContent = "Añadir Tarea";
     addButton.onclick = addTask;
 
@@ -356,6 +357,7 @@ function updateTask(index) {
     loadTasks();
     updateTaskListForGoals();
 }
+
 
 function deleteTask(index) {
     let tasks = JSON.parse(localStorage.getItem("tasks"));

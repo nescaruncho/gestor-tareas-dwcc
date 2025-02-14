@@ -52,7 +52,7 @@
         <h2>GESTOR DE TAREAS</h2>
         <hr class="mi-linea2">
         <div class="nuevo-objetivo">
-            <h3>Nueva tarea:</h3>
+            <h3 id="taskTitle">Nueva tarea:</h3>
         </div>
         <br>
         <label for="taskName">Nombre:</label>
@@ -80,7 +80,7 @@
         <button onclick="addTask()">Añadir Tarea</button><br>
         <br>
         <div class="nuevo-objetivo">
-            <h3>Tareas:</h3>
+            <h3>Tareas</h3>
         </div>
         <div id="tasks" class="task-list"></div>
     </div>
@@ -106,7 +106,7 @@
 
         <div id="editGoalFormContainer" style="display: none;">
             <div class="nuevo-objetivo">
-                <h3>Editar Objetivo:</h3>
+                <h3>Editar objetivo:</h3>
             </div>
             <label for="editGoalName">Nombre:</label>
             <input type="text" id="editGoalName" placeholder="Nombre del objetivo">
