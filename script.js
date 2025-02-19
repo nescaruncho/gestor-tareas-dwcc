@@ -311,6 +311,9 @@ function updateTask(index) {
     let tasks = JSON.parse(localStorage.getItem("tasks"));
     let task = tasks[index];
 
+    // Guardamos el nombre antiguo para actualizar los objetivos
+    let oldName = task.name;
+
     // Obtener los valores actualizados del formulario
     task.name = document.getElementById("taskName").value;
     task.date = document.getElementById("taskDate").value;
@@ -336,6 +339,17 @@ function updateTask(index) {
     // Guardar las tareas actualizadas
     localStorage.setItem("tasks", JSON.stringify(tasks));
 
+    // Actualizar el nombre de la tarea en los objetivos
+    let goals = JSON.parse(localStorage.getItem("goals")) || [];
+    goals.forEach(goal => {
+        if (goal.tasks.includes(oldName)) {
+            goal.tasks = goal.tasks.map(taskName => 
+                taskName === oldName ? task.name : taskName
+            );
+        }
+    });
+    localStorage.setItem("goals", JSON.stringify(goals));
+
     // Mostrar mensaje de éxito
     Swal.fire({ icon: 'success', title: '¡Éxito!', text: `La tarea "${task.name}" se ha actualizado correctamente.` });
 
@@ -356,7 +370,9 @@ function updateTask(index) {
     // Actualizar vistas
     loadTasks();
     updateTaskListForGoals();
+    loadGoals(); // 🔹 Recargar los objetivos para mostrar los nuevos nombres
 }
+
 
 
 function deleteTask(index) {
@@ -792,16 +808,33 @@ function loadCategorias() {
 
 function eliminarCategoriasSeleccionadas() {
     let categories = JSON.parse(localStorage.getItem("categories")) || [];
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    
     // Obtener todos los tags seleccionados
     let selectedTags = document.querySelectorAll("#categoriesTags .category-tag.selected");
     let categoriesToDelete = Array.from(selectedTags).map(tag => tag.getAttribute("data-category"));
 
     if (categoriesToDelete.length === 0) {
-        return Swal.fire({
+        Swal.fire({
             icon: 'error',
             title: 'Error',
             text: 'Selecciona al menos una categoría para eliminar.'
         });
+        return;
+    }
+
+    // Verificar si alguna tarea está usando estas categorías
+    let usedCategories = categoriesToDelete.filter(category => 
+        tasks.some(task => task.category === category)
+    );
+
+    if (usedCategories.length > 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'No se pueden eliminar estas categorías',
+            text: `Las siguientes categorías están en uso por tareas activas: ${usedCategories.join(", ")}`,
+        });
+        return;
     }
 
     // Filtrar las categorías eliminando las seleccionadas
@@ -817,6 +850,7 @@ function eliminarCategoriasSeleccionadas() {
     // Recargar la vista de categorías
     loadCategorias();
 }
+
 
 
 
@@ -843,16 +877,19 @@ function validarAcceso() {
                 showConfirmButton: false,
                 allowOutsideClick: false,
                 allowEscapeKey: false,
-                timer: 3000 // Cierra automáticamente la alerta después de 3 segundos
+                timer: 3000 
             }).then(() => {
-                window.close(); // Intenta cerrar la pestaña actual
+                window.close();
             });
         } else {
             document.getElementById("contenido").style.display = "block";
-            Swal.fire("Acceso concedido", "¡Enhorabuena por tu pelazo!", "success");
+            Swal.fire("Acceso concedido", "¡Enhorabuena por tu pelazo!", "success").then(() => {
+                checkTaskDeadlines(); // 🔹 Ejecuta la verificación después de validar el acceso
+            });
         }
     });
 }
+
 
 
 
