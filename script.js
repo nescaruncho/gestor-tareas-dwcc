@@ -694,6 +694,12 @@ function updateGoalProgress(index, increment) {
     // Actualizar solo si el valor ha cambiado
     if (currentProgress !== newProgress) {
         goal.progress = newProgress;
+
+        if (newProgress === 100) {
+            goal.completed = true;
+            
+        }
+
         localStorage.setItem("goals", JSON.stringify(goals));
         loadGoals(); // Recargar la vista
         
