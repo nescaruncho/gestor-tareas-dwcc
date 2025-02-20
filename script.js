@@ -1,7 +1,7 @@
 /************************************************************************************************************
  ********************************* CARGA DE DATOS AL INICIAR LA APLICACIÓN **********************************
  ************************************************************************************************************/
- document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     loadTasks();           // Cargar las tareas
     loadCategorias();      // Cargar las categorías
     loadGoals();           // Cargar los objetivos
@@ -377,23 +377,26 @@ function updateTask(index) {
 
 function deleteTask(index) {
     let tasks = JSON.parse(localStorage.getItem("tasks"));
-    // Capturamos el nombre de la tarea que se va a eliminar
     let deletedTaskName = tasks[index].name;
 
-    // Eliminamos la tarea del array de tareas
+    // Verificar si la tarea está asociada a algún objetivo
+    let goals = JSON.parse(localStorage.getItem("goals")) || [];
+    let isAssociatedWithGoal = goals.some(goal => Array.isArray(goal.tasks) && goal.tasks.includes(deletedTaskName));
+
+    if (isAssociatedWithGoal) {
+        Swal.fire({
+            icon: 'error',
+            title: 'No se puede eliminar',
+            text: `La tarea "${deletedTaskName}" está asociada a un objetivo. Debes desvincularla primero.`
+        });
+        return;
+    }
+
+    // Si no está asociada a ningún objetivo, procedemos a eliminarla
     tasks.splice(index, 1);
     localStorage.setItem("tasks", JSON.stringify(tasks));
 
-    // Actualizamos los objetivos: eliminar la tarea eliminada de cada objetivo
-    let goals = JSON.parse(localStorage.getItem("goals")) || [];
-    goals.forEach(goal => {
-        if (Array.isArray(goal.tasks)) {
-            goal.tasks = goal.tasks.filter(taskName => taskName !== deletedTaskName);
-        }
-    });
-    localStorage.setItem("goals", JSON.stringify(goals));
-
-    // Actualizamos la vista: tareas y objetivos
+    // Actualizar vista de tareas
     loadTasks();
     updateTaskListForGoals();
     loadGoals();
@@ -709,10 +712,29 @@ function updateGoalProgress(index, increment) {
 function toggleGoal(index) {
     let goals = JSON.parse(localStorage.getItem("goals")) || [];
 
-    if (goals[index]) {  // Asegurarse de que el índice es válido
-        goals[index].completed = !goals[index].completed;
-        localStorage.setItem("goals", JSON.stringify(goals));
-        loadGoals(); // Actualiza la lista de objetivos
+    if (goals[index]) {
+        
+        if (goals[index].progress < 100) {
+            Swal.fire({
+                title: '¿Seguro que quieres completar este objetivo?',
+                text: `El progreso actual es ${goals[index].progress}%`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    goals[index].completed = !goals[index].completed;
+                    goals[index].progress = 100;
+                    localStorage.setItem("goals", JSON.stringify(goals));
+                    loadGoals();
+                }
+            });
+        } else {
+            goals[index].completed = !goals[index].completed;
+            localStorage.setItem("goals", JSON.stringify(goals));
+            loadGoals();
+        }
     }
 }
 
@@ -889,8 +911,3 @@ function validarAcceso() {
         }
     });
 }
-
-
-
-
-
