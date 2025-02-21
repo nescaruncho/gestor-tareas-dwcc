@@ -97,6 +97,11 @@ button {
     color: white;
 }
 
+.menu-buttons button.active {
+    transform: translateY(-4px) scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out;
+}
 /* Botón Gestor de Categorías (primer botón) */
 .menu-buttons button:nth-child(1) {
     background-color: #57b1fa;
@@ -128,6 +133,19 @@ button {
     background-color: #003f5d;
     transform: translateY(-4px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos específicos para cada botón cuando están activos */
+.menu-buttons button:nth-child(1).active {
+    background-color: #3ea2f5;
+}
+
+.menu-buttons button:nth-child(2).active {
+    background-color: #006db2;
+}
+
+.menu-buttons button:nth-child(3).active {
+    background-color: #003f5d;
 }
 
 /* ---------------------------------------------------------------------------
@@ -296,6 +314,14 @@ select,
 
 .btnProgress:active {
     transform: scale(0.95);
+}
+/* Clase para resaltar el botón activo */
+.active-btn {
+    background-color: #ff9800 !important;
+    /* Cambia el color de fondo */
+    color: white !important;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 

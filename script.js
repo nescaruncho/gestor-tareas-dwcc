@@ -9,6 +9,19 @@ document.addEventListener("DOMContentLoaded", () => {
     updateTaskListForGoals();  // Actualizar tareas en los objetivos
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const buttons = document.querySelectorAll(".menu-buttons button");
+
+    buttons.forEach(button => {
+        button.addEventListener("click", function () {
+            // Remover la clase "active" de todos los botones
+            buttons.forEach(btn => btn.classList.remove("active"));
+
+            // Agregar la clase "active" al botón seleccionado
+            this.classList.add("active");
+        });
+    });
+});
 
 /************************************************************************************************************
  ******************************** FUNCIONES PARA ELEGIR EL GESTOR A MOSTRAR *********************************
