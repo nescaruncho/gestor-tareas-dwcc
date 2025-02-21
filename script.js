@@ -702,15 +702,6 @@ function updateGoalProgress(index, increment) {
 
         localStorage.setItem("goals", JSON.stringify(goals));
         loadGoals(); // Recargar la vista
-        
-        // Mostrar notificación del cambio
-        Swal.fire({
-            icon: 'success',
-            title: 'Progreso actualizado',
-            text: `Progreso de "${goal.name}" actualizado a ${newProgress}%`,
-            timer: 1500,
-            showConfirmButton: false
-        });
     }
 }
 
