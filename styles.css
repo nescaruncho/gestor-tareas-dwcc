@@ -8,10 +8,28 @@
 }
 
 body {
+    position: relative;
     font-family: Arial, sans-serif;
     padding: 20px;
     background-color: #f4f7fa;
 }
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('img/fondo4.avif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.30; /* Ajusta la opacidad 0.7, 0.3, 0.3*/
+    z-index: -1;
+}
+
+
 
 h1 {
     text-align: center;
@@ -49,6 +67,7 @@ select>option {
     border-radius: 12px;
     width: 100%;
 }
+
 
 .nuevo-objetivo h3 {
     margin: 0;
