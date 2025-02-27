@@ -902,21 +902,51 @@ function validarAcceso() {
         allowEnterKey: false,
     }).then((result) => {
         if (result.isConfirmed) {
+            // Si es calvo, preguntamos si es Zinedine Zidane
             Swal.fire({
-                title: "Acceso restringido: \nNo se admiten calvos.",
-                text: "PD: Vete a Turquía si quieres entrar.",
-                icon: "error",
-                showConfirmButton: false,
+                title: "¿Eres Zinedine Zidane?",
+                icon: "question",
+                showDenyButton: true,
+                confirmButtonText: "Sí",
+                denyButtonText: "No",
                 allowOutsideClick: false,
                 allowEscapeKey: false,
-                timer: 3000 
-            }).then(() => {
-                window.close();
+                allowEnterKey: false,
+            }).then((result2) => {
+                if (result2.isConfirmed) {
+                    // Si es Zidane, se concede acceso y se muestra el mensaje de felicitación
+                    document.getElementById("contenido").style.display = "block";
+                    Swal.fire(
+                        "Acceso concedido",
+                        "¡Enhorabuena Zinedine Zidane por ser un calvo guapo!",
+                        "success"
+                    ).then(() => {
+                        checkTaskDeadlines();
+                    });
+                } else {
+                    // Si no es Zidane, se niega el acceso
+                    Swal.fire({
+                        title: "Acceso restringido: \nNo se admiten calvos y menos si son feos🤦‍♂️",
+                        text: "PD: Vete a Turquía si quieres entrar.",
+                        icon: "error",
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        timer: 3000 
+                    }).then(() => {
+                        window.close();
+                    });
+                }
             });
         } else {
+            // Si no es calvo, se concede el acceso normalmente
             document.getElementById("contenido").style.display = "block";
-            Swal.fire("Acceso concedido", "¡Enhorabuena por tu pelazo!", "success").then(() => {
-                checkTaskDeadlines(); // 🔹 Ejecuta la verificación después de validar el acceso
+            Swal.fire(
+                "Acceso concedido",
+                "¡Enhorabuena por tu pelazo!",
+                "success"
+            ).then(() => {
+                checkTaskDeadlines();
             });
         }
     });
