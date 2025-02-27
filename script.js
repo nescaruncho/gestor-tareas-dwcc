@@ -920,7 +920,7 @@ function validarAcceso() {
                     document.getElementById("contenido").style.display = "block";
                     Swal.fire(
                         "Acceso concedido",
-                        "¡Enhorabuena Zinedine Zidane por ser un calvo guapo!",
+                        "¡Bienvenido, Zizou!",
                         "success"
                     ).then(() => {
                         checkTaskDeadlines();
