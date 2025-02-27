@@ -905,7 +905,9 @@ function validarAcceso() {
             // Si es calvo, preguntamos si es Zinedine Zidane
             Swal.fire({
                 title: "¿Eres Zinedine Zidane?",
-                icon: "question",
+                imageUrl: 'img/zidaneguapo.jpg',
+                imageHeight: 330,
+                imageWidth: 250,
                 showDenyButton: true,
                 confirmButtonText: "Sí",
                 denyButtonText: "No",
